@@ -4,7 +4,7 @@ import Login from "./components/Login/Login"
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
+      <BrowserRouter basename="/ChatApp">
         <Routes>
           <Route path="/" element={<Login />} />
           {/* <Route path="/" element={<ChatRoom />} /> */}
