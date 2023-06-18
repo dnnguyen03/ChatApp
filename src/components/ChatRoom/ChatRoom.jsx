@@ -1,3 +1,12 @@
+import SideBar from "./SideBar"
+import ChatWindow from "./ChatWindow"
+import { Stack } from "@mui/material"
+
 export default function ChatRoom() {
-  return <div className="ChatRoom"> this is chatroom</div>
+  return (
+    <Stack direction="row" minHeight="100vh" height="100%">
+      <SideBar />
+      <ChatWindow />
+    </Stack>
+  )
 }

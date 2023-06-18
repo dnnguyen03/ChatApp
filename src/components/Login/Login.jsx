@@ -1,39 +1,42 @@
 import { useState } from "react"
-import { Button, Col, Row, Typography } from "antd"
-import { signInWithPopup, FacebookAuthProvider } from "firebase/auth"
+import {
+  signInWithPopup,
+  FacebookAuthProvider,
+  getAdditionalUserInfo,
+} from "firebase/auth"
 import { auth } from "../../firebase/config"
-const { Title } = Typography
+import { Button, Stack, Typography } from "@mui/material"
+import { addDocument } from "../../firebase/services"
 
 export default function Login() {
-  const [user, setUser] = useState(null)
-
   const handleFBLogin = () => {
     const provider = new FacebookAuthProvider()
     signInWithPopup(auth, provider)
       .then((result) => {
-        // Xử lý thông tin người dùng
-        const user = result.user
-        console.log(user)
+        if (!getAdditionalUserInfo(result)) {
+          addDocument("users", {
+            displayName: result.user.displayName,
+            email: result.user.email,
+            photoURL: result.user.photoURL,
+            uid: result.user.uid,
+            providerId: getAdditionalUserInfo(result).providerId,
+            // keywords: generateKeywords(result.user.displayName?.toLowerCase()),
+          })
+        }
       })
       .catch((error) => {
-        // Xử lý lỗi
         console.log(error)
       })
   }
-
   return (
     <div className="Login">
-      <Row justify="center" style={{ height: "800px" }}>
-        <Col span={8}>
-          <Title style={{ textAlign: "center" }}>Fun Chat</Title>
-          <Button style={{ width: "100%", marginBottom: 5 }}>
-            Đăng nhập bằng Google
-          </Button>
-          <Button style={{ width: "100%" }} onClick={handleFBLogin}>
-            Đăng nhập bằng Facebook
-          </Button>
-        </Col>
-      </Row>
+      <Stack gap={2} m={3}>
+        <Typography align="center">Fun Chat</Typography>
+        <Button variant="contained">Đăng nhập bằng Google</Button>
+        <Button variant="contained" onClick={handleFBLogin}>
+          Đăng nhập bằng Facebook
+        </Button>
+      </Stack>
     </div>
   )
 }
