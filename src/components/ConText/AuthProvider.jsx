@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react"
+import { createContext, useEffect, useState } from "react"
 
 import { onIdTokenChanged } from "firebase/auth"
 import { useNavigate } from "react-router-dom"
 import { auth } from "../../firebase/config"
 import { Box, CircularProgress } from "@mui/material"
 
-export const AuthConText = React.createContext()
+export const AuthConText = createContext()
 
 export default function AuthProvider({ children }) {
   const navigate = useNavigate()
@@ -33,7 +33,14 @@ export default function AuthProvider({ children }) {
   return (
     <AuthConText.Provider value={{ user }}>
       {loading ? (
-        <Box sx={{ display: "flex" }}>
+        <Box
+          sx={{
+            display: "grid",
+            placeItems: "center",
+            height: "100vh",
+            width: "100vw",
+          }}
+        >
           <CircularProgress />
         </Box>
       ) : (

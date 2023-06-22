@@ -1,26 +1,26 @@
-import { useState } from "react"
 import {
   signInWithPopup,
   FacebookAuthProvider,
   getAdditionalUserInfo,
+  GoogleAuthProvider,
 } from "firebase/auth"
 import { auth } from "../../firebase/config"
 import { Button, Stack, Typography } from "@mui/material"
-import { addDocument } from "../../firebase/services"
+import { addDocument, generateKeywords } from "../../firebase/services"
 
 export default function Login() {
-  const handleFBLogin = () => {
-    const provider = new FacebookAuthProvider()
+  function Signin(provider) {
     signInWithPopup(auth, provider)
       .then((result) => {
-        if (!getAdditionalUserInfo(result)) {
+        if (getAdditionalUserInfo(result).isNewUser) {
           addDocument("users", {
             displayName: result.user.displayName,
             email: result.user.email,
             photoURL: result.user.photoURL,
             uid: result.user.uid,
-            providerId: getAdditionalUserInfo(result).providerId,
-            // keywords: generateKeywords(result.user.displayName?.toLowerCase()),
+            providerId: result.providerId,
+            createdAt: result.user.metadata.creationTime,
+            keywords: generateKeywords(result.user.displayName),
           })
         }
       })
@@ -28,11 +28,21 @@ export default function Login() {
         console.log(error)
       })
   }
+  const handleFBLogin = () => {
+    const facebookProvider = new FacebookAuthProvider()
+    Signin(facebookProvider)
+  }
+  const handleGGLogin = () => {
+    const googleProvider = new GoogleAuthProvider()
+    Signin(googleProvider)
+  }
   return (
     <div className="Login">
       <Stack gap={2} m={3}>
         <Typography align="center">Fun Chat</Typography>
-        <Button variant="contained">Đăng nhập bằng Google</Button>
+        <Button variant="contained" onClick={handleGGLogin}>
+          Đăng nhập bằng Google
+        </Button>
         <Button variant="contained" onClick={handleFBLogin}>
           Đăng nhập bằng Facebook
         </Button>

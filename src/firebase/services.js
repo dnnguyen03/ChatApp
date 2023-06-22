@@ -1,18 +1,61 @@
-import { collection, addDoc, serverTimestamp } from "firebase/firestore"
-import firebase, { db } from "./config"
+import { collection, addDoc } from "firebase/firestore"
+import { db } from "./config"
 
-export const addDocument = async (collectionName, data) => {
+export const addDocument = (collectionName, data) => {
   const dbRef = collection(db, collectionName)
-  //   const newData = {
-  //     ...data,
-  //     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-  //   }
+
   addDoc(dbRef, data)
-    .then((docRef) => {
-      console.log(docRef)
-      console.log("Document has been added successfully")
-    })
+    .then((docRef) => {})
     .catch((error) => {
       console.log(error)
     })
+}
+
+//setup keyword for search
+export const generateKeywords = (displayName) => {
+  const name = displayName.split(" ").filter((word) => word)
+
+  const length = name.length
+  let flagArray = []
+  let result = []
+  let stringArray = []
+
+  for (let i = 0; i < length; i++) {
+    flagArray[i] = false
+  }
+
+  const createKeywords = (name) => {
+    const arrName = []
+    let curName = ""
+    name.split("").forEach((letter) => {
+      curName += letter
+      arrName.push(curName)
+    })
+    return arrName
+  }
+
+  function findPermutation(k) {
+    for (let i = 0; i < length; i++) {
+      if (!flagArray[i]) {
+        flagArray[i] = true
+        result[k] = name[i]
+
+        if (k === length - 1) {
+          stringArray.push(result.join(" "))
+        }
+
+        findPermutation(k + 1)
+        flagArray[i] = false
+      }
+    }
+  }
+
+  findPermutation(0)
+
+  const keywords = stringArray.reduce((acc, cur) => {
+    const words = createKeywords(cur)
+    return [...acc, ...words]
+  }, [])
+
+  return keywords
 }
