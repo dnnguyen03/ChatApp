@@ -8,10 +8,15 @@ export default function UserInfo() {
     user: { displayName, photoURL },
   } = useContext(AuthConText)
   return (
-    <Stack direction="row" justifyContent="space-between" alignItems="center">
-      <Stack>
+    <Stack
+      direction="row"
+      justifyContent="space-between"
+      alignItems="center"
+      m="15px 0"
+    >
+      <Stack direction="row" alignItems="center" gap={2}>
         <Avatar src={photoURL} alt={displayName} />
-        <Typography>{displayName}</Typography>
+        <Typography color="#2b2d3a">{displayName}</Typography>
       </Stack>
       <Stack>
         <Button variant="contained" onClick={() => auth.signOut()}>

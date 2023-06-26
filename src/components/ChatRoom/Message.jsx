@@ -15,7 +15,6 @@ export default function Message(props) {
       gap={1}
       width="100%"
       m={`${userSend ? "8px 0 20px auto" : "8px 0 20px"}`}
-      // m="0 8px 20px"
     >
       <Stack width="100%">
         <Stack
@@ -31,7 +30,7 @@ export default function Message(props) {
           >
             {timeSend}
           </Typography>
-          <Typography>{displayname}</Typography>
+          <Typography color="#2b2d3a">{displayname}</Typography>
         </Stack>
         <Stack
           width="fit-content"
@@ -39,10 +38,15 @@ export default function Message(props) {
         >
           <Typography
             maxWidth="350px"
-            bgcolor="#1976d2"
-            color="white"
+            bgcolor={`${userSend ? "#ea4b4b" : "#e0e7eb"} `}
+            color={`${userSend ? "white" : "#2b2d3a"}`}
             p="4px 8px"
-            borderRadius="10px"
+            borderRadius="12px"
+            boxShadow={`${
+              userSend
+                ? "0px 0px 2px 1px rgba(234, 75, 75, 0.8)"
+                : "0px 0px 15px 1px rgba(224, 231, 235, 0.8)"
+            }`}
             style={{ overflowWrap: "break-word" }}
           >
             {text}

@@ -6,8 +6,9 @@ export const AppContext = createContext()
 
 export default function AppProvider({ children }) {
   const [addRoomVisible, setAddRoomVisible] = useState(false)
-
   const [inviteMemberVisible, setInviteMemberVisible] = useState(false)
+  const [modalLeave, setModalLeave] = useState(false)
+  const [modalMembers, setModalMembers] = useState(false)
   const [selectedRoomId, setSelectedRoomId] = useState("")
 
   const {
@@ -58,6 +59,10 @@ export default function AppProvider({ children }) {
         inviteMemberVisible,
         setInviteMemberVisible,
         clearState,
+        modalLeave,
+        setModalLeave,
+        modalMembers,
+        setModalMembers,
       }}
     >
       {children}

@@ -1,40 +1,31 @@
-import { Button, Stack, TextField, Typography, styled } from "@mui/material"
+import { useContext, useEffect, useMemo, useRef, useState } from "react"
+import { AppContext } from "../ConText/AppProvider"
+import { AuthConText } from "../ConText/AuthProvider"
+import { addDocument } from "../../firebase/services"
+import useFirestore from "../../firebase/useFirestore"
+import Message from "./Message"
+
+import { Button, Stack, TextField, Typography } from "@mui/material"
 import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded"
 import Avatar from "@mui/material/Avatar"
 import AvatarGroup from "@mui/material/AvatarGroup"
-import Message from "./Message"
-import { useContext, useEffect, useMemo, useRef, useState } from "react"
-import { AppContext } from "../ConText/AppProvider"
-import { Alert } from "antd"
-import { addDocument } from "../../firebase/services"
-import { AuthConText } from "../ConText/AuthProvider"
-import useFirestore from "../../firebase/useFirestore"
-import { format } from "date-fns"
-import { auth } from "../../firebase/config"
+import SendIcon from "@mui/icons-material/Send"
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz"
+import GroupIcon from "@mui/icons-material/Group"
+import LogoutIcon from "@mui/icons-material/Logout"
 
-const CssTextField = styled(TextField)({
-  "& label.Mui-focused": {
-    color: "#ffffff",
-  },
-  "& label": {
-    color: "#ffffff",
-  },
-  "& input": {
-    color: "#ffffff",
-  },
-  "& .MuiOutlinedInput-root": {
-    "& fieldset": {
-      borderColor: "#ffffff",
-    },
-    "&.Mui-focused fieldset": {
-      borderColor: "#ffffff",
-    },
-  },
-})
+import { Alert, Dropdown, Space } from "antd"
+
+import { format } from "date-fns"
 
 export default function ChatWindow() {
-  const { selectedRoom, members, setInviteMemberVisible } =
-    useContext(AppContext)
+  const {
+    selectedRoom,
+    members,
+    setInviteMemberVisible,
+    setModalLeave,
+    setModalMembers,
+  } = useContext(AppContext)
   const {
     user: { uid, photoURL, displayName },
   } = useContext(AuthConText)
@@ -48,18 +39,23 @@ export default function ChatWindow() {
   }
   const currentTime = new Date().getTime()
 
-  const handleOnSubmit = () => {
-    if (valueInput.trim() !== "") {
-      addDocument("messages", {
-        text: valueInput,
-        uid,
-        photoURL,
-        roomId: selectedRoom.id,
-        displayName,
-        timeSend: format(new Date(), "PPPP"),
-        createdAt: currentTime,
-      })
-      setValueInput("")
+  const handleOnSubmit = (e) => {
+    if (e.key === "Enter") {
+      if (valueInput.trim() !== "") {
+        addDocument("messages", {
+          text: valueInput,
+          uid,
+          photoURL,
+          roomId: selectedRoom.id,
+          displayName,
+          timeSend: format(new Date(), "PPPP"),
+          createdAt: currentTime,
+        })
+        setValueInput("")
+      }
+      return
+    } else {
+      return
     }
   }
   const condition = useMemo(
@@ -79,8 +75,41 @@ export default function ChatWindow() {
     // divRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
 
+  //data dropdown
+  const items = [
+    {
+      label: (
+        <Button
+          fullWidth
+          startIcon={<GroupIcon />}
+          variant="text"
+          onClick={() => setModalMembers(true)}
+        >
+          members
+        </Button>
+      ),
+      key: "0",
+    },
+    {
+      type: "divider",
+    },
+    {
+      label: (
+        <Button
+          fullWidth
+          startIcon={<LogoutIcon />}
+          variant="text"
+          onClick={() => setModalLeave(true)}
+        >
+          leave
+        </Button>
+      ),
+      key: "1",
+    },
+  ]
+  console.log(valueInput)
   return (
-    <Stack flex={4} bgcolor="#212121" overflow="hidden">
+    <Stack flex={4} bgcolor="white" overflow="hidden">
       {selectedRoom.id ? (
         <>
           <Stack
@@ -88,16 +117,20 @@ export default function ChatWindow() {
             direction="row"
             justifyContent="space-between"
             alignItems="center"
-            borderBottom="1px solid #ffffff"
-            color="#ffffff"
+            borderBottom="0.5px solid rgba(0, 0, 0, 0.25)"
+            color="#212121"
             p="10px 15px"
             position="sticky"
             top={0}
             zIndex={2}
-            bgcolor="#212121"
           >
             <Typography fontSize="24px">{selectedRoom.nameRoom}</Typography>
-            <Stack direction="row" gap={3}>
+            <Stack
+              direction="row"
+              gap={3}
+              justifyContent="center"
+              alignItems="center"
+            >
               <Button
                 size="medium"
                 variant="contained"
@@ -115,11 +148,17 @@ export default function ChatWindow() {
                   />
                 ))}
               </AvatarGroup>
+              <Dropdown menu={{ items }} trigger={["click"]}>
+                <Space>
+                  <MoreHorizIcon />
+                </Space>
+              </Dropdown>
             </Stack>
           </Stack>
           <Stack
             ref={windowRef}
             position="relative"
+            p="0 15px"
             height={
               inForRoomRef.current
                 ? `calc(100vh - ${
@@ -148,17 +187,23 @@ export default function ChatWindow() {
             autoComplete="off"
             direction="row"
           >
-            <CssTextField
+            <TextField
+              type="text"
               value={valueInput}
               fullWidth
               onChange={handleInputChang}
-              onKeyDown={(e) => {
-                e.key === "Enter" && handleOnSubmit()
-              }}
-              placeholder="Enter a message"
+              variant="filled"
+              onKeyDown={handleOnSubmit}
+              label="Enter a message"
             />
-            <Button variant="contained" onClick={handleOnSubmit} type="submit">
-              Send
+
+            <Button
+              variant="contained"
+              style={{ backgroundColor: "#ea4b4b" }}
+              onClick={handleOnSubmit}
+              type="submit"
+            >
+              <SendIcon />
             </Button>
           </Stack>
         </>

@@ -30,8 +30,8 @@ export default function AddRoomModal() {
     backgroundColor: "white",
     boxShadow: 24,
     outline: "none",
-    padding: "40px 45px",
-    borderRadius: 15,
+    padding: "20px 45px",
+    borderRadius: 8,
     display: "flex",
     flexDirection: "column",
     gap: 15,
@@ -40,6 +40,7 @@ export default function AddRoomModal() {
       cursor: "pointer",
     },
     form: {
+      width: "300px",
       display: "flex",
       flexDirection: "column",
       gap: 15,
@@ -47,7 +48,12 @@ export default function AddRoomModal() {
   })
   const currentTime = new Date().getTime()
   const onSubmit = (data) => {
-    addDocument("rooms", { ...data, members: [uid], createdAt: currentTime })
+    addDocument("rooms", {
+      ...data,
+      members: [uid],
+      createdAt: currentTime,
+      admin: uid,
+    })
     setAddRoomVisible(false)
     reset()
   }
@@ -69,6 +75,7 @@ export default function AddRoomModal() {
         </Typography>
         <form action="" onSubmit={handleSubmit(onSubmit)}>
           <TextField
+            fullWidth
             label="Room name"
             type="text"
             {...register("nameRoom", { required: "Room name is required" })}

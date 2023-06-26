@@ -1,4 +1,12 @@
-import { collection, addDoc } from "firebase/firestore"
+import {
+  collection,
+  addDoc,
+  doc,
+  deleteDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore"
 import { db } from "./config"
 
 export const addDocument = (collectionName, data) => {
@@ -11,6 +19,26 @@ export const addDocument = (collectionName, data) => {
     })
 }
 
+export const deleteDocument = async (collectionName, docId) => {
+  try {
+    await deleteDoc(doc(db, collectionName, docId))
+  } catch (error) {
+    console.error("Error removing document: ", error)
+  }
+}
+
+export const deleteRoomMessage = async (collectionName, roomId) => {
+  try {
+    const querySnapshot = await getDocs(
+      query(collection(db, collectionName), where("roomId", "==", roomId))
+    )
+    querySnapshot.forEach((doc) => {
+      deleteDocument(collectionName, doc.id)
+    })
+  } catch (error) {
+    console.error("Error removing documents: ", error)
+  }
+}
 //setup keyword for search
 export const generateKeywords = (displayName) => {
   const name = displayName.split(" ").filter((word) => word)

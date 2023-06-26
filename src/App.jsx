@@ -5,6 +5,8 @@ import AuthProvider from "./components/ConText/AuthProvider"
 import AppProvider from "./components/ConText/AppProvider"
 import AddRoomModal from "./components/Modal/AddRoomModal"
 import InviteMemberModal from "./components/Modal/InviteMemberModal"
+import LeaveRoom from "./components/Modal/LeaveRoom"
+import MembersModal from "./components/Modal/MembersModal"
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
             </Routes>
             <AddRoomModal />
             <InviteMemberModal />
+            <LeaveRoom />
+            <MembersModal />
           </AppProvider>
         </AuthProvider>
       </HashRouter>
