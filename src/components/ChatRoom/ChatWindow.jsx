@@ -41,6 +41,7 @@ export default function ChatWindow() {
 
   const handleOnSubmit = (e) => {
     if (e.key === "Enter") {
+      e.preventDefault()
       if (valueInput.trim() !== "") {
         addDocument("messages", {
           text: valueInput,
