@@ -125,7 +125,7 @@ export default function ChatWindow() {
   ]
 
   return (
-    <Stack flex={4} bgcolor="white" overflow="hidden">
+    <Stack flex={4} bgcolor="white" height="100vh" overflow="hidden">
       {selectedRoom.id ? (
         <>
           <Stack

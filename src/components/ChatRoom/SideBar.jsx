@@ -32,7 +32,7 @@ export default function SideBar() {
       p="0 20px"
       borderRight="1px solid #ffffff"
       position="relative"
-      minHeight="100%"
+      minHeight="100vh"
       maxWidth="500px"
       sx={{
         translate: `${toggle ? "-100% 0" : "0"}`,
