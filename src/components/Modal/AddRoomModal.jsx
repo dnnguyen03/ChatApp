@@ -40,7 +40,6 @@ export default function AddRoomModal() {
       cursor: "pointer",
     },
     form: {
-      width: "300px",
       display: "flex",
       flexDirection: "column",
       gap: 15,
@@ -57,10 +56,10 @@ export default function AddRoomModal() {
     setAddRoomVisible(false)
     reset()
   }
-  console.warn = function () {}
+
   return (
     <Modal open={addRoomVisible}>
-      <CssBoxModal>
+      <CssBoxModal width={{ md: "auto", xs: "60%" }}>
         <Stack
           position="absolute"
           top={8}
@@ -73,14 +72,19 @@ export default function AddRoomModal() {
         <Typography textAlign="center" variant="h5">
           Add new room
         </Typography>
-        <form action="" onSubmit={handleSubmit(onSubmit)}>
+        <form
+          action=""
+          onSubmit={handleSubmit(onSubmit)}
+          style={{ width: "100%" }}
+        >
           <TextField
             fullWidth
             label="Room name"
             type="text"
-            {...register("nameRoom", { required: "Room name is required" })}
-            error={!!errors.nameRoom}
-            helperText={errors.nameRoom?.message}
+            required
+            {...register("nameRoom")}
+            // error={errors.nameRoom}
+            // helperText={errors.nameRoom?.message}
           />
 
           <Button

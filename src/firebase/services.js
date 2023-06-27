@@ -41,7 +41,10 @@ export const deleteRoomMessage = async (collectionName, roomId) => {
 }
 //setup keyword for search
 export const generateKeywords = (displayName) => {
-  const name = displayName.split(" ").filter((word) => word)
+  const name = displayName
+    .toLowerCase()
+    .split(" ")
+    .filter((word) => word)
 
   const length = name.length
   let flagArray = []

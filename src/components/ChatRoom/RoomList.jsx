@@ -77,7 +77,17 @@ export default function RoomList() {
                 setSelectedRoomId(room.id)
               }}
             >
-              {room.nameRoom}
+              <p
+                style={{
+                  margin: 0,
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                  maxWidth: "25ch",
+                }}
+              >
+                {room.nameRoom}
+              </p>
             </Stack>
           ))}
         </Stack>

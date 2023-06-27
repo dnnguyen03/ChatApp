@@ -1,0 +1,11 @@
+@media screen and (max-width: 1024px) {
+  .SideBar {
+    width: 70%;
+    transition: all 0.3s ease;
+    position: absolute !important;
+    z-index: 3;
+  }
+  .switch {
+    display: block !important;
+  }
+}

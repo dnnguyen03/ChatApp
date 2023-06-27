@@ -1,7 +1,8 @@
-import { Avatar, Button, Stack, Typography } from "@mui/material"
-import { auth } from "../../firebase/config"
 import { useContext } from "react"
+import { auth } from "../../firebase/config"
 import { AuthConText } from "../ConText/AuthProvider"
+
+import { Avatar, Button, Stack, Typography } from "@mui/material"
 
 export default function UserInfo() {
   const {
@@ -19,7 +20,15 @@ export default function UserInfo() {
         <Typography color="#2b2d3a">{displayName}</Typography>
       </Stack>
       <Stack>
-        <Button variant="contained" onClick={() => auth.signOut()}>
+        <Button
+          variant="contained"
+          sx={{
+            fontSize: { sm: 14, xs: 12 },
+            padding: { md: "5px 10px", xs: "3px" },
+            marginLeft: "10px",
+          }}
+          onClick={() => auth.signOut()}
+        >
           Đăng xuất
         </Button>
       </Stack>

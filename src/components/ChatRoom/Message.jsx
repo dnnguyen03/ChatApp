@@ -1,6 +1,7 @@
-import { Avatar, Stack, Typography } from "@mui/material"
 import { useContext } from "react"
 import { AuthConText } from "../ConText/AuthProvider"
+
+import { Avatar, Stack, Typography } from "@mui/material"
 
 export default function Message(props) {
   const { photoUrl, displayname, timeSend, text, uidSend } = props
@@ -24,7 +25,7 @@ export default function Message(props) {
         >
           <Typography
             variant="h6"
-            fontSize={14}
+            fontSize={{ md: 14, xs: 12 }}
             color="#828282"
             letterSpacing="-.5px"
           >
@@ -37,7 +38,7 @@ export default function Message(props) {
           m={`${userSend ? "0 0 0 auto" : "0 auto 0 0"}`}
         >
           <Typography
-            maxWidth="350px"
+            maxWidth={{ md: "350px", xs: "200px" }}
             bgcolor={`${userSend ? "#ea4b4b" : "#e0e7eb"} `}
             color={`${userSend ? "white" : "#2b2d3a"}`}
             p="4px 8px"
@@ -48,6 +49,7 @@ export default function Message(props) {
                 : "0px 0px 15px 1px rgba(224, 231, 235, 0.8)"
             }`}
             style={{ overflowWrap: "break-word" }}
+            fontSize={{ md: "1rem", xs: "13px" }}
           >
             {text}
           </Typography>

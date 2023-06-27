@@ -13,10 +13,12 @@ import SendIcon from "@mui/icons-material/Send"
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz"
 import GroupIcon from "@mui/icons-material/Group"
 import LogoutIcon from "@mui/icons-material/Logout"
+import EditIcon from "@mui/icons-material/Edit"
 
 import { Alert, Dropdown, Space } from "antd"
 
 import { format } from "date-fns"
+import EditRoomName from "../Modal/EditRoomName"
 
 export default function ChatWindow() {
   const {
@@ -29,6 +31,7 @@ export default function ChatWindow() {
   const {
     user: { uid, photoURL, displayName },
   } = useContext(AuthConText)
+  const [editRoomNameModal, setEditRoomNameModal] = useState(false)
   const [valueInput, setValueInput] = useState("")
   const inForRoomRef = useRef()
   const divRef = useRef()
@@ -39,24 +42,20 @@ export default function ChatWindow() {
   }
   const currentTime = new Date().getTime()
 
-  const handleOnSubmit = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault()
-      if (valueInput.trim() !== "") {
-        addDocument("messages", {
-          text: valueInput,
-          uid,
-          photoURL,
-          roomId: selectedRoom.id,
-          displayName,
-          timeSend: format(new Date(), "PPPP"),
-          createdAt: currentTime,
-        })
-        setValueInput("")
-      }
-      return
+  const handleOnSubmit = () => {
+    if (valueInput.trim() !== "") {
+      addDocument("messages", {
+        text: valueInput,
+        uid,
+        photoURL,
+        roomId: selectedRoom.id,
+        displayName,
+        timeSend: format(new Date(), "PPPP"),
+        createdAt: currentTime,
+      })
+      setValueInput("")
     } else {
-      return
+      return false
     }
   }
   const condition = useMemo(
@@ -82,6 +81,22 @@ export default function ChatWindow() {
       label: (
         <Button
           fullWidth
+          startIcon={<EditIcon />}
+          variant="text"
+          onClick={() => setEditRoomNameModal(true)}
+        >
+          edit room name
+        </Button>
+      ),
+      key: "0",
+    },
+    {
+      type: "divider",
+    },
+    {
+      label: (
+        <Button
+          fullWidth
           startIcon={<GroupIcon />}
           variant="text"
           onClick={() => setModalMembers(true)}
@@ -89,7 +104,7 @@ export default function ChatWindow() {
           members
         </Button>
       ),
-      key: "0",
+      key: "1",
     },
     {
       type: "divider",
@@ -105,10 +120,10 @@ export default function ChatWindow() {
           leave
         </Button>
       ),
-      key: "1",
+      key: "2",
     },
   ]
-  console.log(valueInput)
+
   return (
     <Stack flex={4} bgcolor="white" overflow="hidden">
       {selectedRoom.id ? (
@@ -125,7 +140,15 @@ export default function ChatWindow() {
             top={0}
             zIndex={2}
           >
-            <Typography fontSize="24px">{selectedRoom.nameRoom}</Typography>
+            <Typography
+              fontSize="24px"
+              overflow="hidden"
+              whiteSpace="nowrap"
+              textOverflow="ellipsis"
+              maxWidth="35ch"
+            >
+              {selectedRoom.nameRoom}
+            </Typography>
             <Stack
               direction="row"
               gap={3}
@@ -159,7 +182,7 @@ export default function ChatWindow() {
           <Stack
             ref={windowRef}
             position="relative"
-            p="0 15px"
+            p={{ md: "0 15px", xs: "0 5px" }}
             height={
               inForRoomRef.current
                 ? `calc(100vh - ${
@@ -194,19 +217,31 @@ export default function ChatWindow() {
               fullWidth
               onChange={handleInputChang}
               variant="filled"
-              onKeyDown={handleOnSubmit}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault()
+                  handleOnSubmit()
+                }
+              }}
               label="Enter a message"
             />
 
             <Button
               variant="contained"
               style={{ backgroundColor: "#ea4b4b" }}
-              onClick={handleOnSubmit}
+              onClick={(e) => {
+                e.preventDefault()
+                handleOnSubmit()
+              }}
               type="submit"
             >
               <SendIcon />
             </Button>
           </Stack>
+          <EditRoomName
+            editRoomNameModal={editRoomNameModal}
+            setEditRoomNameModal={setEditRoomNameModal}
+          />
         </>
       ) : (
         <Alert

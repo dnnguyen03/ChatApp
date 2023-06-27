@@ -1,7 +1,4 @@
-import { Stack, Typography } from "@mui/material"
 import { useContext, useEffect, useMemo, useState } from "react"
-import { AppContext } from "../ConText/AppProvider"
-import { debounce } from "lodash"
 import {
   collection,
   doc,
@@ -12,7 +9,11 @@ import {
   where,
 } from "firebase/firestore"
 import { db } from "../../firebase/config"
+import { AppContext } from "../ConText/AppProvider"
+
 import { Avatar, Form, Modal, Select, Spin } from "antd"
+import { debounce } from "lodash"
+import { Stack, Typography } from "@mui/material"
 
 function DebounceSelect({
   fetchOption,
@@ -67,7 +68,7 @@ async function fetchUserList(search, curMembers) {
   const usersRef = collection(db, "users")
   const q = query(
     usersRef,
-    where("keywords", "array-contains", search),
+    where("keywords", "array-contains", search.toLowerCase()),
     limit(5)
   )
   const snapshot = await getDocs(q)
