@@ -103,7 +103,7 @@ export default function MembersModal() {
             Members
           </Typography>
           <List>
-            {members.map((item) => (
+            {members?.map((item) => (
               <ListItem
                 key={item.uid}
                 alignItems="center"
